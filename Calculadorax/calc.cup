@@ -1,0 +1,44 @@
+import java_cup.runtime.*;
+
+/* Código adicional en Java */
+parser code {:
+    public static int var = 0; // Variable global para X
+:};
+
+
+/* Terminales */
+terminal EOLN, PYC, AP, CP;
+terminal PLUS, MINUS, DIV, POR, MENOSUNARIO, EQ;
+terminal Integer NUMERO, EQUIS;
+
+/* No Terminales */
+non terminal DOC; 
+non terminal LINEA;
+non terminal Integer EXPR;
+
+/* Precedencia */
+precedence left MINUS, PLUS;
+precedence left DIV, POR;
+precedence nonassoc MENOSUNARIO;
+
+
+/* Gramática */
+DOC     ::= DOC LINEA
+          | LINEA
+          ;
+
+LINEA   ::= EXPR:e EOLN {: System.out.println(e); :}
+          | EXPR:e PYC {: System.out.println(e); :}
+          | EQUIS EQ NUMERO:x1 {: parser.var = x1; :}
+          | EOLN
+          ;
+
+EXPR    ::= EXPR:x PLUS EXPR:x1 {: RESULT = x + x1; :}
+          | EXPR:x MINUS EXPR:x1 {: RESULT = x - x1; :}
+          | EXPR:x POR EXPR:x1 {: RESULT = x * x1; :}
+          | EXPR:x DIV EXPR:x1 {: RESULT = x / x1; :}
+          | AP EXPR:x CP {: RESULT = x; :}
+          | MINUS NUMERO:x1 {: RESULT = -x1; :} %prec MENOSUNARIO
+          | NUMERO:x1 {: RESULT = x1; :}        
+          | EQUIS {: RESULT = parser.var; :}
+          ;

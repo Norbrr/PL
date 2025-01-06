@@ -1,0 +1,168 @@
+import java_cup.runtime.*;
+
+action code {: 
+
+        // Variables globales
+    private int var = 0;
+    private int etq = 0;
+    
+    
+    // Generadores de referencias
+    /**
+     * Genera una variable con la estructura '$vX', siendo X un número.
+     */
+    private String crearVariable() {
+        return "$v" + (var++);
+    }
+    
+    /**
+     * Genera una etiqueta con la estructura 'EX', siendo X un número.
+     */
+    private String crearEtiqueta() {
+        return "E" + (etq++);
+    }
+    
+        
+    //// Generadores de código intermedio (.ctd)----------------------------------------------------------------------------------
+
+        public void suma (String variable, String a , String b){
+                PLC.out.println("\t" + variable + "=" + a + "+" + b + ";");
+        }
+
+        public void resta (String variable, String a, String b){
+                PLC.out.println("\t" + variable + "=" + a + "-" + "b" + ";" );
+        }
+        
+        public void por (String variable, String a, String b){
+                PLC.out.println("\t" + variable + "=" + a + "*" + "b" + ";" );
+
+        }
+        
+        public void div (String variable, String a, String b){
+                PLC.out.println("\t" + variable + "=" + a + "/" + "b" + ";" );
+        }
+
+        public void min(String variable, String a) {
+        PLC.out.println("\t" + variable + " = -" + a + ";");
+        }
+    
+
+        //Operadores
+
+        public void 
+
+
+
+        // Condicion
+        class Condicion {
+        
+        // Variable
+        private String[] etiquetas = {null, null, null};
+        
+        
+        // Constructores
+        public Condicion() {
+            etiquetas[0] = crearEtiqueta();
+            etiquetas[1] = crearEtiqueta();
+        }
+        
+        public Condicion(String etiqueta1, String etiqueta2) {
+            etiquetas[0] = etiqueta1;
+            etiquetas[1] = etiqueta2;
+        }
+        
+        
+        // Getters
+        public String etqTrue() {
+            return etiquetas[0];
+        }
+        
+        public String etqFalse() {
+            return etiquetas[1];
+        }
+        
+        public String etqSalida() {
+            return etiquetas[2];
+        }
+        
+        
+        // Setters
+        public void setEtqTrue(String etiqueta) {
+            etiquetas[0] = etiqueta;
+        }
+        
+        public void setEtqFalse(String etiqueta) {
+            etiquetas[1] = etiqueta;
+        }
+        
+        public void setEtqSalida(String etiqueta) {
+            etiquetas[2] = etiqueta;
+        }
+    }
+    
+:}
+
+
+
+
+
+
+
+
+/* TERMINALES */
+terminal    IF, ELSE, DO, WHILE, FOR, PRINT;        // Funciones del lenguaje
+terminal    EQ, NE, LT, LE, GT, GE, NO, AND, OR;    // Operadores lógicos
+terminal    SUM, RES, MUL, DIV, MENOSUNARIO, IGUAL; // Operadores matemáticos
+terminal    AP, CP, AC, CC, AL, CL;                 // Aperturas y cierres
+terminal    PYC;                                    // Fin de línea
+
+terminal    String  VAR, NUM;    // Valores numéricos
+
+
+/* No terminales */
+non terminal         LSent, Sent, Cond, SentIF; 
+non terminal Integer Expr;
+
+/* Precedencia */
+precedence left MAS, MENOS;
+precedence left POR, DIV;
+precedence nonassoc MENOSUNARIO;
+precedence  nonassoc    AP, CP;
+precedence  nonassoc    AC, CC;
+precedence  nonassoc    AL, CL;
+
+/* Gramatica */
+
+LSent ::= Sent
+        | LSent Sent
+        ;
+
+
+Sent :: = Expr:e
+        | PRINT AP Expr:e CP PYC {:RESULT = e; Print(e);:}
+        | SentIF
+        ;
+
+SentIF ::= IF AP Cond:c CP {:   :}
+
+Expr ::= Expr:e SUM Expr:e2  {: RESULT = crearVariable(); suma(RESULT, e, e2);:}
+        | Expr:e RES Expr:e2 {:RESULT = crearVariable(); resta(RESULT, e, e2);:}
+        | Expr:e MUL Expr:e2 {:RESULT = crearVariable(); por(RESULT, e, e2);:}
+        | Expr:e DIV Expr:e2 {:RESULT = crearVariable(); div(RESULT, e, e2);:}
+        | RES Expr:e {:RESULT = CrearVariable(); min(RESULT, e, e2);:} %prec MENOSUNARIO
+        | AP Expr:e CP {:RESULT = e:} 
+        | VAR:v IGUAL Expr {:RESULT = v; variable(RESULT, e);:}
+        | VAR:v {:RESULT=v;:}
+        | NUM:n {:RESULT = n;:}
+        ;
+Cond ::= Expr EQ Expr {: RESULT = new Condicion(); ifIgual(a,b, RESULT.etqTrue); salto(RESULT.etqFalse); :;}
+        |Expr EXC Expr
+        |Expr FI Expr
+        |Expr FD Expr 
+        |Expr FI EQ Expr
+        |Expr FD EQ Expr
+        |EXC Cond
+        |Cond AMP AMP Cond
+        |Cond OR OR Cond
+        |AP Cond CP
+        ;

@@ -1,0 +1,47 @@
+import java_cup.runtime.*;
+parser code {:
+    import java.util.ArrayList;
+:};
+
+terminal ALL, CLL, AP, CP, AC, CC, COMA, PYC, ASIG, MAS;
+terminal MENOS, POR, DIV, INVERSA, TRANSPUESTA, ADJUNTA, PRINT, IDENT;
+terminal DOUBLE NUMERO;
+
+non terminal ArrayList<ArrayList<Double>> MATRIZ, FILAS;
+non terminal ArrayList<Double> FILA;
+non terminal Object INSTR, DOC, LINEA;
+
+
+ /* Gramatica */
+
+    DOC ::= DOC LINEA
+        |LINEA 
+    ;
+    LINEA ::= INSTR PYC;
+
+    INSTR ::= IDENT:a1 ASIG INSTR:i1 {: TablaSimbolos.insertar(a1,i1):;}
+            |INVERSA AP MATRIZ:m1 CP {: RESULT = Matrices.inversa(m1) :;}
+            | TRANSPUESTA AP MATRIZ:m1  CP {: RESULT = Matrices.transpuesta(m1):;}
+            | ADJUNTA AP MATRIZ:m1 CP {:RESULT = Matrices.adjunta(m1):;}
+            | PRINT AP MATRIZ:m1 CP {:Matrices.print(m1):;}
+            | IDENT:i1 ASIG AP MATRIZ:m1 CP {:TablaSimbolos.insertar(i1,m1):;}
+            | MATRIZ:m1 MAS AP MATRIZ:m CP {:RESULT = Matrices.suma(m1,m):;}
+            | MATRIZ:m MENOS AP MATRIZ:m1 CP {:RESULT = Matrices.resta(m,m1):;}
+            | MATRIZ:m POR MATRIZ:m1 {RESULT = Matrices.producto(m,m1)}
+            | MATRIZ:m
+            ;
+
+    MATRIZ ::= MATRIZ:m1 INSTR:i1 {:RESULT = i1:;}
+            | AC FILAS:f1 CC   {:RESULT = f1:;}
+            | AC IDENT:i CC {: RESULT = TablaSimbolos.buscar(i);:} 
+            ;
+
+    FILAS ::= FILAS:f1 PYC FILA:f2 {: f1.add(f2); RESULT = f1:;}
+            | FILA:f1 {:  ArrayList<ArrayList<Double>> nuevamat = new ArrayList<>(); nuevamat.add(f1); RESULT= nuevamat;:}
+            ;
+
+    FILA ::= FILA:f1 NUMERO:n  {:f1.add(n):;}  
+            | NUMERO:n   {: ArrayList<Double> nuevaFila = new ArrayList<>(); 
+                            nuevaFila.add(n);
+                            RESULT = nuevaFila:;} 
+            ;

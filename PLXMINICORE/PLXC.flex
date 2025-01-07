@@ -55,8 +55,8 @@ import java_cup.runtime.*;
 
 // Valores
 int                     { return new Symbol(sym.INTE, yytext()); }
-float                     { return new Symbol(sym.FLOAT, yytext()); }
-char
+float                     { return new Symbol(sym.FLO, yytext()); }
+char                     { return new Symbol(sym.CH, yytext()); }
 
 [0-9]+                  { return new Symbol(sym.NUM, yytext()); }
 [_a-zA-Z][_a-zA-Z0-9]*  { return new Symbol(sym.VAR, yytext()); }

@@ -223,12 +223,12 @@ exp     ::= exp:a SUM exp:b     {:  RESULT = crearVariable();   suma(RESULT, a, 
           | AP exp:e CP         {:  RESULT = e;                                         :}
           | RES exp:e           {:  RESULT = crearVariable();   negativo(RESULT, e);    :}
             %prec NEG
-          | INTE exp:v          {:  RESULT = crearVariable();  declarada(v); :}
-          | FLO exp:v           {:  RESULT = crearVariable();  declarada(v); :}
-          | CH exp:v            {:  RESULT = crearVariable();  declarada(v); :}
-          | VAR:v IGUAL exp:e   {:  RESULT = v;:}
-          | VAR:v               {:  RESULT = v;:}
-          | NUM:n               {:  RESULT = n;:};
+          | INTE exp:v          {:  RESULT = crearVariable();  variable(v); :}
+          | FLO exp:v           {:  RESULT = crearVariable();  variable(v); :}
+          | CH exp:v            {:  RESULT = crearVariable();  variable(v); :}
+          | VAR:v IGUAL exp:e   {:  RESULT = v; declarada(v);:}
+          | VAR:v               {:  RESULT = v; declarada(v);:}
+          | NUM:n               {:  RESULT = n; declarada(v);:};
 
 // Condiciones
 cond    ::= exp:a EQ exp:b      {:  RESULT = new Condicion();   ifIgual(a, b, RESULT.etqTrue());    salto(RESULT.etqFalse());   :}

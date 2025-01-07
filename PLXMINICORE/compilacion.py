@@ -1,34 +1,45 @@
 import subprocess
+import os
 
-# Comando de Compilacion
-archivoentrada = input("Archivo Entrada: ")
+# Solicitar archivo de entrada
+archivoentrada = input("Archivo Entrada (sin extensión): ")
 
+# Verificar existencia del archivo
+if not os.path.exists(f"{archivoentrada}.plx"):
+    print(f"Error: El archivo {archivoentrada}.plx no existe.")
+    exit(1)
 
+# Comandos
+commands = [
+    "chmod +x plxc",  # Asegura que el ejecutable 'plxc' tenga permisos de ejecución
+    "jflex PLXC.flex",  # Genera el analizador léxico
+    "cup PLXC.cup",  # Genera el parser
+    "javac -cp java-cup-11b-runtime.jar *.java",  # Compila las clases generadas
+    f"java -cp .:java-cup-11b.jar PLXC {archivoentrada}.plx {archivoentrada}.ctd",
+    f"./ctd {archivoentrada}.ctd {archivoentrada}.txt",  # Ejecuta el parser
+    f"./plxc {archivoentrada}.plx {archivoentrada}1.ctd",
+    f"./ctd {archivoentrada}1.ctd {archivoentrada}.txt",  # Genera la salida de ejecución
+]
 
-command = "jflex PLXC.flex"  # Este comando muestra los archivos y directorios en formato largo
-command2 = "cup PLXC.cup"
-command3 = "javac -cp java-cup-11b-runtime.jar *.java"
-command4 = f'''java -cp ".:java-cup-11b.jar" -debug PLXC {archivoentrada}.plx {archivoentrada}.ctd'''
-command5 = f'''./ctd {archivoentrada}.ctd {archivoentrada}.txt'''
+# Ejecutar los comandos en orden
+for i, cmd in enumerate(commands):
+    print(f"Ejecutando: {cmd}")
+    result = subprocess.run(cmd, shell=True)
+    if result.returncode != 0:
+        print(f"Error al ejecutar el comando {i + 1}: {cmd}")
+        exit(1)
 
-commandpl = f"./plxc {archivoentrada}.plx {archivoentrada}pl.ctd"
-commandpl2 = f"./ctd {archivoentrada}.ctd"
-
-comext = "chmod +x {archivoentrada}.plx"
-# Ejecutar el comando
-subprocess.run("chmod +x plxc", shell=True)
-subprocess.run(command, shell=True)
-subprocess.run(command2, shell=True)
-subprocess.run(command3, shell=True)
-subprocess.run(command4, shell=True)
-res = subprocess.run(command5, shell=True)
-
-#print(commandpl)
-#subprocess.run(commandpl)
-#res2 =subprocess.run(commandpl2)
-
-
-#if res2.stdout == res.stdout:
- #   print ("Todo Correcto Mi negro")
-#else:
-#   print ("Faltal Cabroon")
+# Comprobación adicional
+# try:
+    # Comparar salidas si es necesario
+ #    with open(f"{archivoentrada}.ctd", "r") as ctd_file:
+ #        ctd_content = ctd_file.read()
+  #   with open(f"{archivoentrada}1.txt", "r") as txt_file:
+ #        txt_content = txt_file.read()
+    
+#     if ctd_content == txt_content:
+ #        print("Todo correcto.")
+#     else:
+ #        print("Error: Las salidas no coinciden.")
+# except FileNotFoundError as e:
+ #    print(f"Error al abrir archivos de salida: {e}")

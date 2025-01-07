@@ -4,7 +4,6 @@ import java_cup.runtime.*;
 
 %int
 %cup
-%debug
 %%
 
 // Funciones del lenguaje
@@ -45,6 +44,7 @@ import java_cup.runtime.*;
 "-"         { return new Symbol(sym.RES);   }
 "*"         { return new Symbol(sym.MUL);   }
 "/"         { return new Symbol(sym.DIV);   }
+","         { return new Symbol(sym.COMA);  }
 
 "="         { return new Symbol(sym.IGUAL); }
 
@@ -54,9 +54,9 @@ import java_cup.runtime.*;
 
 
 // Valores
-int                     { return new Symbol(sym.INTE, yytext()); }
-float                     { return new Symbol(sym.FLO, yytext()); }
-char                     { return new Symbol(sym.CH, yytext()); }
+"int"                     { return new Symbol(sym.INTE, yytext()); }
+"float"                     { return new Symbol(sym.FLO, yytext()); }
+"char"                     { return new Symbol(sym.CH, yytext()); }
 
 [0-9]+                  { return new Symbol(sym.NUM, yytext()); }
 [_a-zA-Z][_a-zA-Z0-9]*  { return new Symbol(sym.VAR, yytext()); }

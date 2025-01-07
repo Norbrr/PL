@@ -1,17 +1,10 @@
-import java_cup.runtime.*;
-import java.util.Set;
-import java.util.HashSet;
+import java_cup.runtime.*; // Importación necesaria para CUP
+import java.util.*;
+
+
 
 /* ACCIONES JAVA */
 action code {:
-    
-    private boolean debug = true;
-
-    public void logDebug(String message) {
-    if (debug) {
-        System.out.println("DEBUG: " + message);
-    }
-}
 
     // Variables globales
     private int var = 0;
@@ -40,23 +33,24 @@ action code {:
     
     // Referencias
     public void variable(String variables, String valor) {
-         if(variablesDeclaradas.contains(valor)){
-            PLXC.out.println("\t" + "Error:" + "Variable ya declarada");
-         }else{
+         PLXC.out.println("\t" + variables + " = " + valor + ";");
+         if(!(variablesDeclaradas.contains(variables) && variablesDeclaradas.contains(valor))){
             variablesDeclaradas.add(variables);
-            PLXC.out.println("\t" + variables + " = " + valor + ";");
          }
+    }
+        public void variablecheck(String variables) {
+         if(!(variablesDeclaradas.contains(variables))){
+            variablesDeclaradas.add(variables);
+        }else{}
         
     }
 
-    public void declarada(String variables){
-        if(variablesDeclaradas.contains(variables)){
-         
-        }else{
-            PLXC.out.println("\t"+"Error:" + "Variable ya declarada");
+    public void declarada(String variable) {
+        if (!variablesDeclaradas.contains(variable)) {
+            PLXC.out.println("\t"+"Error: Variable no declarada -> " + variable);
         }
     }
-    
+
     public void etiqueta(String etiqueta) {
          PLXC.out.println(etiqueta + ":");
     }
@@ -159,26 +153,36 @@ action code {:
 
 /* TERMINALES */
 terminal    IF, ELSE, DO, WHILE, FOR, PRINT;        // Funciones del lenguaje
-terminal    EQ, NE, LT, LE, GT, GE, NO, AND, OR;    // Operadores lógicos
-terminal    SUM, RES, MUL, DIV, NEG, IGUAL, INTE, FLO, CH;         // Operadores matemáticos
-terminal    AP, CP, AC, CC, AL, CL;                 // Aperturas y cierres
+terminal    EQ, NE, NEG, LT, LE, GT, GE, NO, AND, OR;    // Operadores lógicos
+terminal    SUM, RES, MUL, DIV, IGUAL, INTE, FLO, CH;         // Operadores matemáticos
+terminal    AP, CP, AC, CC, AL, CL, COMA;                 // Aperturas y cierres
 terminal    PYC;                                    // Fin de línea
 terminal    String NUM;
 terminal    String VAR; 
 
 /* NO-TERMINALES */
-non terminal    sents, sent;            // Sentencias genéricas
+non terminal    sents, sent, TP;            // Sentencias genéricas
 non terminal    sent_print;             // Sentencia de función 'print'
 non terminal    sent_if, sent_else;     // Sentencia de función 'if' ó 'if-else'
-import subprocess
 
-# Comando de Compilacion
+non terminal    Condicion   cond;       // Condición
+non terminal    String      exp;        // Expresión matemática
+non terminal    String      sent_while; // Sentencia de función 'while' ó 'do-while'
+non terminal    String      sent_for;   // Sentencia de función 'for'
+
+
+precedence  left        IF, ELSE, DO, WHILE, FOR, PRINT;  
+precedence  left        SUM, RES;
+precedence  left        MUL, DIV;
+precedence  left        EQ, LE, GE;
+precedence  left        NE, LT, GT;
+precedence  left        NO, AND, OR;
+precedence  left        VAR, NUM;
 
 precedence  nonassoc    NEG;
 precedence  nonassoc    AP, CP;
 precedence  nonassoc    AC, CC;
 precedence  nonassoc    AL, CL;
-
 
 /* GRAMÁTICA */
 // Sentencias
@@ -216,19 +220,18 @@ sent_for    ::= FOR                     {:  RESULT = crearEtiqueta();           
                 sent                    {:  salto(RESULT);              etiqueta(c.etqFalse());                         :};                   
 
 // Expresiones
-exp     ::= exp:a SUM exp:b     {:  RESULT = crearVariable();   suma(RESULT, a, b);     :}
-          | exp:a RES exp:b     {:  RESULT = crearVariable();   resta(RESULT, a, b);    :}
-          | exp:a MUL exp:b     {:  RESULT = crearVariable();   producto(RESULT, a, b); :}
-          | exp:a DIV exp:b     {:  RESULT = crearVariable();   division(RESULT, a, b); :}
+exp     ::= exp:a SUM exp:b     {:  RESULT = crearVariable();   suma(RESULT, a, b);:}
+          | exp:a RES exp:b     {:  RESULT = crearVariable();   resta(RESULT, a, b);:}
+          | exp:a MUL exp:b     {:  RESULT = crearVariable();   producto(RESULT, a, b);:}
+          | exp:a DIV exp:b     {:  RESULT = crearVariable();   division(RESULT, a, b);:}
           | AP exp:e CP         {:  RESULT = e;                                         :}
           | RES exp:e           {:  RESULT = crearVariable();   negativo(RESULT, e);    :}
             %prec NEG
-          | INTE exp:v          {:  RESULT = crearVariable();  variable(v); :}
-          | FLO exp:v           {:  RESULT = crearVariable();  variable(v); :}
-          | CH exp:v            {:  RESULT = crearVariable();  variable(v); :}
-          | VAR:v IGUAL exp:e   {:  RESULT = v; declarada(v);:}
-          | VAR:v               {:  RESULT = v; declarada(v);:}
-          | NUM:n               {:  RESULT = n; declarada(v);:};
+          | VAR:v IGUAL exp:e   {:  RESULT = v; variable(RESULT, e); declarada(v);:}
+          | VAR:v COMA exp:e        {:  RESULT = v; variablecheck(v);:}
+          | VAR:v               {:  RESULT = v; variablecheck(v);:}
+          | NUM:n               {:  RESULT = n;:}
+          | INTE exp:v           {:  RESULT = crearVariable();:};
 
 // Condiciones
 cond    ::= exp:a EQ exp:b      {:  RESULT = new Condicion();   ifIgual(a, b, RESULT.etqTrue());    salto(RESULT.etqFalse());   :}
@@ -243,4 +246,3 @@ cond    ::= exp:a EQ exp:b      {:  RESULT = new Condicion();   ifIgual(a, b, RE
             cond:b              {:  etiqueta(a.etqFalse());     salto(b.etqFalse());    RESULT = b; :}
           | cond:a OR           {:  etiqueta(a.etqFalse());                                         :}
             cond:b              {:  etiqueta(a.etqTrue());      salto(b.etqTrue());     RESULT = b; :};
-

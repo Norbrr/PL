@@ -1,0 +1,10 @@
+	$v1 = alfa + 1;
+	$v2 = beta + 2;
+	$v3 = $v1 * $v2;
+	$v4 = 3 + $v3;
+	beta = $v4;
+	alfa = beta;
+	$v6 = 2 * alfa;
+	$v7 = $v6 - beta;
+	delta = $v7;
+	print delta;

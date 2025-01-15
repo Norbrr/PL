@@ -1,0 +1,55 @@
+	a = 2;
+	b = 3;
+	c = 4;
+	b = a;
+	if (a < b) goto E0;
+	goto E1;
+E1:
+	b = a;
+	c = b;
+	if (b < c) goto E2;
+	goto E3;
+E0:
+	goto E3;
+E3:
+	a = 3;
+	print 1;
+	goto E4;
+E2:
+E4:
+	if (a < b) goto E5;
+	goto E6;
+E6:
+	if (b < c) goto E7;
+	goto E8;
+E5:
+	goto E8;
+E8:
+	if (c < a) goto E9;
+	goto E10;
+E7:
+	goto E10;
+E10:
+	if (c < a) goto E11;
+	goto E12;
+E9:
+	goto E11;
+E11:
+	if (c < b) goto E13;
+	goto E14;
+E12:
+	goto E14;
+E13:
+	if (b < a) goto E15;
+	goto E16;
+E14:
+	goto E16;
+E15:
+	a = 4;
+	print 2;
+	goto E17;
+E16:
+E17:
+	$v0 = a * b;
+	$v1 = $v0 * c;
+	print $v1;

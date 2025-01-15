@@ -357,7 +357,7 @@ class CUP$parser$actions {
             
         }
     }
-/*
+
     public String ParamCheck(String a){
         if(a != null && a.matches("\\d+")){
             return a;
@@ -367,7 +367,7 @@ class CUP$parser$actions {
             return variablesDeclaradas.get(a);
         }
     }
-*/
+
     public void Asociar(String a, String b){
         variablesDeclaradas.put(a,b);
     }
@@ -858,7 +858,7 @@ class CUP$parser$actions {
 		int eleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		String e = (String)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = v; variable(RESULT,Igualdad(e,v));
+		 RESULT = v; variable(RESULT,e);
               CUP$parser$result = parser.getSymbolFactory().newSymbol("exp",7, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;

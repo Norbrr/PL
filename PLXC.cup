@@ -54,7 +54,7 @@ action code {:
             
         }
     }
-/*
+
     public String ParamCheck(String a){
         if(a != null && a.matches("\\d+")){
             return a;
@@ -64,7 +64,7 @@ action code {:
             return variablesDeclaradas.get(a);
         }
     }
-*/
+
     public void Asociar(String a, String b){
         variablesDeclaradas.put(a,b);
     }
@@ -111,6 +111,70 @@ action code {:
     public void ifIgual(String a, String b, String etiqueta) {
         PLXC.out.println("\tif (" + a + " == " + b + ") goto " + etiqueta + ";");
     }
+
+
+    // ----------------------------------------------------------------------------------
+    /* Esta clase interna se encarga de almacenar 3 Parametros diferentes
+     * de forma que puedan Asignarse Variables a Parametros a traves de Result
+     * 
+     * Las etiquetas representan lo siguiente:
+     * 1. Salto si se cumple la condición (true).
+     * 2. Salto si no se cumple la condición (false).
+     * 3. Salto tras ejecutar la sentencia (salida).
+     */
+
+    class Variable{
+
+        Private String Tipo;
+        Private String Var;
+        Private String Valor;
+
+        public Variable(){
+            this.tipo = null;
+            this.var = null;
+            this.valor = null;
+
+        }
+        // SETTERS
+        public setInt(){
+            this.tipo = "Int"; 
+        }
+        public setChar(){
+            this.tipo = "Char"; 
+        }
+        public setFloat(){
+            this.tipo = "float";
+        }
+        public setVar(String variable){
+            this.var = variable;
+        }
+        public setValor(String valor){
+            this.valor = valor; 
+        }
+        
+        
+        // GETTERS
+         public getInt(){
+            return this.tipo
+        }
+        public getChar(){
+            return this.tipo
+        }
+        public getFloat(){
+            return this.tipo
+        }
+        public getVar( ){
+            return this.var
+        }
+        public getValor(){
+            return this.valor;
+        }
+
+    }
+
+
+
+
     // ----------------------------------------------------------------------------------
     /* Esta clase interna se encarga de almacenar 3 etiquetas diferentes
      * de forma que puedan moverse por la gramática a través de RESULT.
@@ -120,6 +184,7 @@ action code {:
      * 2. Salto si no se cumple la condición (false).
      * 3. Salto tras ejecutar la sentencia (salida).
      */
+
     class Condicion {
         
         // Variable
@@ -183,7 +248,7 @@ non terminal    sent_print;             // Sentencia de función 'print'
 non terminal    sent_if, sent_else;     // Sentencia de función 'if' ó 'if-else'
 
 non terminal    Condicion   cond;       // Condición
-non terminal    String      exp;        // Expresión matemática
+non terminal    String      exp, Dec;        // Expresión matemática
 non terminal    String      sent_while; // Sentencia de función 'while' ó 'do-while'
 non terminal    String      sent_for;   // Sentencia de función 'for'
 
@@ -244,15 +309,21 @@ exp     ::= exp:a SUM exp:b     {:  RESULT = crearVariable();   suma(RESULT, a, 
           | AP exp:e CP         {:  RESULT = e;                                         :}
           | RES exp:e           {:  RESULT = crearVariable();   negativo(RESULT, e);:}
             %prec NEG
-          | VAR:v IGUAL exp:e   {: RESULT = v; variable(RESULT,Igualdad(e,v));:}
-          | VAR:v COMA exp:e    {: RESULT = v;:}
-          | INTE exp:e          {: RESULT = e;:}
+          | Dec                 {: :}
+          | VAR:v IGUAL exp:e   {: RESULT = v; variable(RESULT,e);:}
           | VAR:v               {: RESULT = v;:}
           | NUM:n               {: RESULT = n;:};
 
+Dec     ::= INTE Dec:e {:RESULT = new Variable(); RESULT.setInt(); RESULT.setVar(crearVariable()); RESULT.setValor(e);:}
+           |CH Dec:e {:RESULT = new Variable(); RESULT.setChar(); RESULT.setVar(crearVariable()); RESULT.setValor(e);:}
+           |FLO Dec:e {:RESULT = new Variable(); RESULT.setFloat(); RESULT.setVar(crearVariable());RESULT.setValor(e);:}
+           |VAR:v COMA Dec:e {:RESULT = new Variable(); RESULT.setFloat(); RESULT.setVar(crearVariable());RESULT.setValor(v);:}
+           |VAR:v {:RESULT = new Variable(); RESULT.setFloat(); RESULT.setVar(crearVariable());RESULT.setValor(v);:};
+
+
 // VAR MODIFY ===> NO MODIFICAR VARIABLES DOS VECES O SINO ME VA A DAR ERROR 
-//          | FLO exp:v           {:  RESULT = crearVariable(); variablecheck(v,"0");:};
-//          | CH exp:v           {:  RESULT = crearVariable(); variablecheck(v,"0");:};
+
+
 // Condiciones
 cond    ::= exp:a EQ exp:b      {:  RESULT = new Condicion();   ifIgual(a, b, RESULT.etqTrue());    salto(RESULT.etqFalse());   :}
           | exp:a NE exp:b      {:  RESULT = new Condicion();   ifIgual(a, b, RESULT.etqFalse());   salto(RESULT.etqTrue());    :}

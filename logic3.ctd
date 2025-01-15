@@ -1,0 +1,124 @@
+	a = 6;
+	b = 12;
+	c = 18;
+	if (a < 1) goto E1;
+	goto E0;
+E0:
+	if (5 < a) goto E3;
+	goto E2;
+E1:
+	goto E3;
+E3:
+	b = a;
+	if (10 < b) goto E4;
+	goto E5;
+E2:
+	goto E4;
+E5:
+	if (b == a) goto E6;
+	goto E7;
+E4:
+	goto E7;
+E7:
+	a = b;
+	goto E8;
+E6:
+E8:
+	if (a == b) goto E9;
+	goto E10;
+E10:
+	if (b == c) goto E11;
+	goto E12;
+E9:
+	goto E11;
+E11:
+	print 1;
+	goto E13;
+E12:
+E13:
+	if (a == b) goto E14;
+	goto E15;
+E14:
+	if (b == c) goto E16;
+	goto E17;
+E15:
+	goto E16;
+E16:
+	print 2;
+	goto E18;
+E17:
+E18:
+	if (a == b) goto E19;
+	goto E20;
+E20:
+	if (b == c) goto E21;
+	goto E22;
+E19:
+	goto E22;
+E22:
+	print 3;
+	goto E23;
+E21:
+E23:
+	if (a == b) goto E24;
+	goto E25;
+E24:
+	if (b == c) goto E26;
+	goto E27;
+E25:
+	goto E27;
+E27:
+	print 4;
+	goto E28;
+E26:
+E28:
+	if (a == b) goto E29;
+	goto E30;
+E29:
+	if (b == c) goto E31;
+	goto E32;
+E30:
+	goto E32;
+E31:
+	print 5;
+	goto E33;
+E32:
+E33:
+	if (a == b) goto E34;
+	goto E35;
+E35:
+	if (b == c) goto E36;
+	goto E37;
+E34:
+	goto E37;
+E36:
+	print 6;
+	goto E38;
+E37:
+E38:
+	if (a == b) goto E39;
+	goto E40;
+E39:
+	if (b == c) goto E41;
+	goto E42;
+E40:
+	goto E41;
+E42:
+	print 7;
+	goto E43;
+E41:
+E43:
+	if (a == b) goto E44;
+	goto E45;
+E45:
+	if (b == c) goto E46;
+	goto E47;
+E44:
+	goto E46;
+E47:
+	print 8;
+	goto E48;
+E46:
+E48:
+	$v0 = a * b;
+	print $v0;

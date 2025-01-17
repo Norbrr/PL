@@ -1,0 +1,5 @@
+	$v0 = x;
+	x = y;
+	$v1 = y;
+	y = z;
+	print x;

@@ -1,7 +1,7 @@
 import java_cup.runtime.*;
 
 %%
-
+%debug
 %int
 %cup
 %%

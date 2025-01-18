@@ -1,0 +1,29 @@
+	a = 2;
+	$v0 = a;
+	b = 3;
+	$v1 = b;
+	c = 4;
+	$v2 = c;
+	b = a;
+	$v3 = b;
+	if (a < $v3) goto E0;
+	goto E1;
+E1:
+	b = a;
+	$v4 = b;
+	c = $v4;
+	$v5 = c;
+	if (b < $v5) goto E2;
+	goto E3;
+E0:
+	goto E2;
+E2:
+	a = 5;
+	$v6 = a;
+	if (a < b) goto E5;
+	goto E6;
+E6:
+	if (b < a) goto E7;
+	goto E8;
+E5:
+	goto E7;

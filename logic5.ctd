@@ -1,18 +1,25 @@
 	a = 2;
+	$v0 = a;
 	b = 3;
+	$v1 = b;
 	c = 4;
+	$v2 = c;
 	b = a;
-	if (a < b) goto E0;
+	$v3 = b;
+	if (a < $v3) goto E0;
 	goto E1;
 E1:
 	b = a;
-	c = b;
-	if (b < c) goto E2;
+	$v4 = b;
+	c = $v4;
+	$v5 = c;
+	if (b < $v5) goto E2;
 	goto E3;
 E0:
 	goto E3;
 E3:
 	a = 3;
+	$v6 = a;
 	print 1;
 	goto E4;
 E2:
@@ -46,10 +53,11 @@ E14:
 	goto E16;
 E15:
 	a = 4;
+	$v7 = a;
 	print 2;
 	goto E17;
 E16:
 E17:
-	$v0 = a * b;
-	$v1 = $v0 * c;
-	print $v1;
+	$v8 = a * b;
+	$v9 = $v8 * c;
+	print $v9;

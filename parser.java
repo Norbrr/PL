@@ -415,6 +415,9 @@ class CUP$parser$actions {
     }
 
     public void SetVar(Variable a, String Tipo, String valor){
+
+      //  variablesDeclaradas.put(a,valor);
+
         a.setValor(valor);
 
         if(Tipo.equals("int")){
@@ -985,7 +988,7 @@ class CUP$parser$actions {
 		int eleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		String e = (String)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-		 RESULT = crearVariable(); variable(v,e);variable(RESULT,v);
+		 RESULT = crearVariable();  variable(v,e);  variable(RESULT,v);
               CUP$parser$result = parser.getSymbolFactory().newSymbol("exp",7, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;

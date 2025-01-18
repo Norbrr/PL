@@ -37,6 +37,9 @@ action code {:
     }
 
     public void SetVar(Variable a, String Tipo, String valor){
+
+      //  variablesDeclaradas.put(a,valor);
+
         a.setValor(valor);
 
         if(Tipo.equals("int")){

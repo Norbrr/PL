@@ -27,3 +27,43 @@ E6:
 	goto E8;
 E5:
 	goto E7;
+E7:
+	if (b < c) goto E9;
+	goto E10;
+E10:
+	if (c < b) goto E11;
+	goto E12;
+E9:
+	goto E11;
+E8:
+	goto E12;
+E11:
+	b = 6;
+	$v7 = b;
+	goto E13;
+E12:
+E13:
+	if (a == 5) goto E14;
+	goto E15;
+E14:
+	if (a == b) goto E16;
+	goto E17;
+E15:
+	goto E17;
+E17:
+	if (b == c) goto E18;
+	goto E19;
+E16:
+	goto E18;
+E19:
+	c = 7;
+	$v8 = c;
+	goto E20;
+E18:
+E20:
+	goto E4;
+E3:
+E4:
+	$v9 = a * b;
+	$v10 = $v9 * c;
+	print $v10;

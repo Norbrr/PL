@@ -1,0 +1,60 @@
+   a = 2;
+   b = 3;
+   c = 4;
+   b = a;
+   if (a < a) goto L0;
+   goto L1;
+L1:
+   b = a;
+   c = a;
+   if (b < a) goto L2;
+   goto L3;
+L0:
+   goto L2;
+L2:
+   a = 5;
+   if (a < b) goto L5;
+   goto L6;
+L6:
+   if (b < a) goto L7;
+   goto L8;
+L5:
+   goto L7;
+L7:
+   if (b < c) goto L9;
+   goto L10;
+L10:
+   if (c < b) goto L11;
+   goto L12;
+L9:
+   goto L11;
+L8:
+   goto L12;
+L11:
+   b = 6;
+   goto L13;
+L12:
+L13:
+   if (a == 5) goto L14;
+   goto L15;
+L14:
+   if (a == b) goto L16;
+   goto L17;
+L17:
+   if (b == c) goto L18;
+   goto L19;
+L16:
+   goto L18;
+L15:
+   goto L19;
+L19:
+   c = 7;
+   goto L20;
+L18:
+L20:
+   goto L4;
+L3:
+L4:
+   $t0 = a * b;
+   $t1 = $t0 * c;
+   print $t1;

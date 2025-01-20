@@ -11,6 +11,7 @@ action code {:
     private int etq = 0;
     
     private Map<String,String> variablesDeclaradas = new HashMap<>();
+    public int Borrar = 0;
     
     // Generadores de referencias
     /**
@@ -37,9 +38,6 @@ action code {:
     }
 
     public void SetVar(Variable a, String Tipo, String valor){
-
-      //  variablesDeclaradas.put(a,valor);
-
         a.setValor(valor);
 
         if(Tipo.equals("int")){
@@ -259,7 +257,7 @@ sent    ::= exp PYC
 // Funciones
 sent_print  ::= PRINT AP exp:e CP PYC   {:  RESULT = e;     print(e);   :};
 
-sent_if     ::= IF AP cond:c CP         {:  c.setEtqSalida(crearEtiqueta());    etiqueta(c.etqTrue());  :}
+sent_if     ::= IF AP cond:c CP         {:Borrar++; System.out.println(Borrar);  c.setEtqSalida(crearEtiqueta());    etiqueta(c.etqTrue()); :}
                 sent                    {:  salto(c.etqSalida());               etiqueta(c.etqFalse()); :}
                 sent_else               {:  etiqueta(c.etqSalida());                                    :};
 
@@ -321,7 +319,7 @@ cond    ::= exp:a EQ exp:b      {:  RESULT = new Condicion();   ifIgual(a, b, RE
           | exp:a LE exp:b      {:  RESULT = new Condicion();   ifMenor(b, a, RESULT.etqFalse());   salto(RESULT.etqTrue());    :}
           | exp:a GT exp:b      {:  RESULT = new Condicion();   ifMenor(b, a, RESULT.etqTrue());    salto(RESULT.etqFalse());   :}
           | exp:a GE exp:b      {:  RESULT = new Condicion();   ifMenor(a, b, RESULT.etqFalse());   salto(RESULT.etqTrue());    :}
-          | AP cond CP
+          | AP cond:c CP        {: RESULT = c;:}
           | NO cond:c           {:  RESULT = new Condicion(c.etqFalse(), c.etqTrue());              :}
           | cond:a AND          {:  etiqueta(a.etqTrue());                                          :}
             cond:b              {:  etiqueta(a.etqFalse());     salto(b.etqFalse());    RESULT = b; :}

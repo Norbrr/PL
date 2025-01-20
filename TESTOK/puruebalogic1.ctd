@@ -1,0 +1,25 @@
+   a = 2;
+   b = 3;
+   c = 5;
+   if (c < b) goto L0;
+   goto L1;
+L1:
+   if (b < a) goto L2;
+   goto L3;
+L0:
+   goto L2;
+L2:
+   if (b < c) goto L4;
+   goto L5;
+L5:
+   if (c < b) goto L6;
+   goto L7;
+L4:
+   goto L6;
+L3:
+   goto L7;
+L6:
+   print c;
+   goto L8;
+L7:
+L8:

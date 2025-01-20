@@ -389,6 +389,7 @@ class CUP$parser$actions {
     private int etq = 0;
     
     private Map<String,String> variablesDeclaradas = new HashMap<>();
+    public int Borrar = 0;
     
     // Generadores de referencias
     /**
@@ -415,9 +416,6 @@ class CUP$parser$actions {
     }
 
     public void SetVar(Variable a, String Tipo, String valor){
-
-      //  variablesDeclaradas.put(a,valor);
-
         a.setValor(valor);
 
         if(Tipo.equals("int")){
@@ -716,7 +714,7 @@ class CUP$parser$actions {
 		int cleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
 		int cright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
 		Condicion c = (Condicion)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
-  c.setEtqSalida(crearEtiqueta());    etiqueta(c.etqTrue());  
+Borrar++; System.out.println(Borrar);  c.setEtqSalida(crearEtiqueta());    etiqueta(c.etqTrue()); 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("NT$0",14, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
@@ -1246,7 +1244,10 @@ class CUP$parser$actions {
           case 53: // cond ::= AP cond CP 
             {
               Condicion RESULT =null;
-
+		int cleft = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-1)).right;
+		Condicion c = (Condicion)((java_cup.runtime.Symbol) CUP$parser$stack.elementAt(CUP$parser$top-1)).value;
+		 RESULT = c;
               CUP$parser$result = parser.getSymbolFactory().newSymbol("cond",6, ((java_cup.runtime.Symbol)CUP$parser$stack.elementAt(CUP$parser$top-2)), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
             }
           return CUP$parser$result;
